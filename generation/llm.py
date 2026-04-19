@@ -1,26 +1,124 @@
-# generation/llm.py — Person 2's file
-# Stub so imports don't break. Person 2 fills this in.
+# generation/llm.py
+import os
+import requests
 
-def generate_recipe(query: str, retrieved_recipes: list[dict], hf_token: str = None) -> str:
-    """
-    Generate a recipe using Mistral-7B via HF Inference API.
-    TODO: Person 2 implements this.
 
-    Args:
-        query: user query
-        retrieved_recipes: list of dicts from hybrid_retrieve()
-        hf_token: HuggingFace API token
+def build_prompt(query: str, retrieved_recipes: list[dict], constraints: dict = None) -> str:
+    if constraints is None:
+        constraints = {}
 
-    Returns:
-        Generated recipe as a string
-    """
-    # Temporary template-based fallback used for evaluation
-    if not retrieved_recipes:
-        return "No recipe found."
-    top = retrieved_recipes[0]
-    ingredients = ", ".join(top["ingredients"])
-    return (
-        f"Recipe: {top['title']}\n"
-        f"Ingredients: {ingredients}\n"
-        f"Instructions: Follow standard cooking procedure."
+    context_blocks = []
+    for i, recipe in enumerate(retrieved_recipes, 1):
+        ingredients = (
+            ", ".join(recipe["ingredients"])
+            if isinstance(recipe["ingredients"], list)
+            else recipe["ingredients"]
+        )
+        context_blocks.append(
+            f"Reference Recipe {i}: {recipe['title']}\n"
+            f"Ingredients: {ingredients}\n"
+            f"Instructions: {recipe['full_text'][:500]}"
+        )
+    context_str = "\n\n".join(context_blocks)
+
+    constraint_lines = []
+    if constraints.get("ingredients"):
+        ing_list = ", ".join(constraints["ingredients"])
+        constraint_lines.append(f"- Available ingredients: {ing_list}. Use ONLY these ingredients unless absolutely essential.")
+    if constraints.get("diet"):
+        constraint_lines.append(f"- Dietary restriction: {constraints['diet']}. This is mandatory — do not include any ingredients that violate this.")
+    if constraints.get("appliance"):
+        constraint_lines.append(f"- Appliance constraint: {constraints['appliance']}. Only suggest cooking methods compatible with this.")
+    if constraints.get("time"):
+        constraint_lines.append(f"- Time limit: {constraints['time']}. The total cooking + prep time must fit within this.")
+    if constraints.get("budget"):
+        constraint_lines.append(f"- Budget: {constraints['budget']}. Keep the recipe affordable within this limit.")
+
+    constraint_str = (
+        "\n".join(constraint_lines)
+        if constraint_lines
+        else "- No specific constraints. Generate the best recipe possible."
     )
+
+    prompt = f"""You are an expert chef and recipe writer. Your job is to generate a clear, detailed, and practical recipe.
+
+You have been given {len(retrieved_recipes)} reference recipes retrieved from a recipe database. Use them as inspiration and grounding — do not hallucinate ingredients or techniques not supported by these references or the user's available ingredients.
+
+--- REFERENCE RECIPES ---
+{context_str}
+
+--- USER REQUEST ---
+Query: {query}
+
+--- CONSTRAINTS (you must follow all of these) ---
+{constraint_str}
+
+--- YOUR TASK ---
+Generate a complete recipe that:
+1. Directly addresses the user's query
+2. Respects every constraint listed above
+3. Is grounded in the reference recipes — do not invent exotic ingredients
+4. Is written in clear, simple steps a home cook can follow
+
+Format your response exactly like this:
+
+Recipe Name: <name>
+
+Ingredients:
+- <ingredient 1 with quantity>
+- <ingredient 2 with quantity>
+
+Instructions:
+1. <step 1>
+2. <step 2>
+
+Estimated Time: <prep + cook time>
+Serves: <number of servings>
+
+Now generate the recipe:"""
+
+    return prompt
+
+
+def generate_recipe(
+    query: str,
+    retrieved_recipes: list[dict],
+    hf_token: str = None,
+    constraints: dict = None
+) -> str:
+    if not retrieved_recipes:
+        return "No relevant recipes found. Please try a different query."
+
+    groq_key = os.environ.get("GROQ_API_KEY")
+    if not groq_key:
+        raise ValueError("GROQ_API_KEY not set in .env file.")
+
+    prompt = build_prompt(query, retrieved_recipes, constraints)
+
+    API_URL = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {groq_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "llama-3.1-8b-instant",
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 600,
+        "temperature": 0.7
+    }
+
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload, timeout=60)
+        response.raise_for_status()
+        result = response.json()
+        generated = result["choices"][0]["message"]["content"].strip()
+        return generated if generated else "Error: Empty response from model."
+
+    except requests.exceptions.Timeout:
+        return "Error: Request timed out. Please try again."
+    except requests.exceptions.HTTPError as e:
+        return f"Error: API returned {e.response.status_code}. {e.response.text[:200]}"
+    except Exception as e:
+        return f"Error generating recipe: {str(e)}"
