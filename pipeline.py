@@ -109,13 +109,13 @@ def person3_pipeline(
     # ── Step 5: Overall feasibility verdict ───────────────────
     reward_score = reward["final_reward"]
     if reward_score >= 0.75:
-        verdict = "Excellent — recipe is highly feasible and well-suited"
+        verdict = "✅ Excellent — recipe is highly feasible and well-suited"
     elif reward_score >= 0.55:
-        verdict = " Good — recipe is feasible with minor adjustments"
+        verdict = "⚠️  Good — recipe is feasible with minor adjustments"
     elif reward_score >= 0.35:
-        verdict = "Fair — recipe needs substitutions or constraint changes"
+        verdict = "🟠 Fair — recipe needs substitutions or constraint changes"
     else:
-        verdict = "Poor — recipe is not feasible under current constraints"
+        verdict = "❌ Poor — recipe is not feasible under current constraints"
 
     results["verdict"] = verdict
     results["reward_score"] = reward_score
@@ -132,25 +132,25 @@ def print_results(results: dict):
     print("PERSON 3 PIPELINE RESULTS")
     print("=" * 55)
 
-    print(f"\nVERDICT: {results['verdict']}")
+    print(f"\n📊 VERDICT: {results['verdict']}")
     print(f"   Reward Score: {results['reward_score']}")
 
     r = results["reward"]
-    print(f"\nREWARD BREAKDOWN:")
+    print(f"\n🧠 REWARD BREAKDOWN:")
     print(f"   Coherence Score         : {r['coherence_score']}")
     print(f"   Constraint Satisfaction : {r['constraint_satisfaction_score']}")
     print(f"   Ingredient Feasibility  : {r['ingredient_feasibility_score']}")
     print(f"   Final Reward            : {r['final_reward']}")
 
-    print(f"\nCOST ESTIMATE:")
+    print(f"\n💸 COST ESTIMATE:")
     c = results["cost"]
     print(f"   Total Cost    : {c['total_cost']}")
     print(f"   Per Serving   : {c['cost_per_serving']}")
     print(f"   Budget        : {c['budget_category']}")
 
     if results["missing_ingredients"]:
-        print(f"\nMISSING INGREDIENTS: {results['missing_ingredients']}")
-        print(f"\nSUBSTITUTIONS:")
+        print(f"\n🔍 MISSING INGREDIENTS: {results['missing_ingredients']}")
+        print(f"\n🔄 SUBSTITUTIONS:")
         for ing, subs in results["substitutions"].items():
             print(f"\n   '{ing}' can be replaced with:")
             for i, s in enumerate(subs, 1):
@@ -158,7 +158,7 @@ def print_results(results: dict):
                 print(f"     {i}. {tag} {s['ingredient']} "
                       f"(score: {s['final_score']})")
     else:
-        print(f"\nAll ingredients are available — no substitutions needed!")
+        print(f"\n✅ All ingredients are available — no substitutions needed!")
 
     print("\n" + "=" * 55)
 
