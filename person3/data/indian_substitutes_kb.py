@@ -15,6 +15,7 @@ INDIAN_SUBSTITUTES_KB = {
     "milk": ["coconut milk", "almond milk", "curd", "buttermilk"],
 
     # Spices
+    "salt": ["rock salt", "sea salt", "sendha namak"],
     "cumin": ["caraway seeds", "fennel seeds", "coriander", "carom seeds"],
     "coriander": ["cumin", "parsley", "curry leaves", "fennel seeds"],
     "turmeric": ["saffron", "paprika", "annatto", "ginger"],
@@ -82,6 +83,7 @@ INDIAN_SUBSTITUTES_KB = {
     "mustard oil": ["sesame oil", "groundnut oil", "refined oil"],
     "groundnut oil": ["refined oil", "sunflower oil", "coconut oil"],
     "sesame oil": ["groundnut oil", "mustard oil", "coconut oil"],
+    "oil":  ["ghee", "butter", "coconut oil", "refined oil"],
 
     # Nuts and Seeds
     "cashew": ["almond", "peanut", "pistachio", "sunflower seeds"],
