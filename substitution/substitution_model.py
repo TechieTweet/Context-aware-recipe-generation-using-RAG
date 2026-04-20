@@ -141,8 +141,8 @@ if __name__ == "__main__":
         print(f"\nTop substitutes for '{ing}':")
         subs = get_substitutes(ing, top_k=5)
         for i, s in enumerate(subs, 1):
-            tag = "🇮🇳" if s["is_indian"] else "International"
-            src =  if s["source"] == "curated_kb" else "ai"
+            tag = "🇮🇳" if s["is_indian"] else "🌍"
+            src = "📖" if s["source"] == "curated_kb" else "🤖"
             print(f"  {i}. {tag}{src} {s['ingredient']}")
             print(f"     Flavor: {s['flavor_similarity']} | "
                   f"Embedding: {s['embedding_similarity']} | "
