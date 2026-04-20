@@ -154,7 +154,7 @@ def print_results(results: dict):
         for ing, subs in results["substitutions"].items():
             print(f"\n   '{ing}' can be replaced with:")
             for i, s in enumerate(subs, 1):
-                tag = "🇮🇳" if s["is_indian"] else 
+                tag = "🇮🇳" if s["is_indian"] else "🌍"
                 print(f"     {i}. {tag} {s['ingredient']} "
                       f"(score: {s['final_score']})")
     else:
