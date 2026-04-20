@@ -161,7 +161,7 @@ def cost():
         "total_cost": "₹85",
         "cost_per_serving": "₹42.5",
         "servings": 2,
-        "budget_category": "💚 Budget friendly",
+        "budget_category": "Budget friendly",
         "breakdown": [...],
         "ingredients_not_found": [...]
     }
@@ -222,10 +222,10 @@ def pipeline():
         "cost": {
             "total_cost": "₹85",
             "cost_per_serving": "₹42.5",
-            "budget_category": "💚 Budget friendly",
+            "budget_category": "Budget friendly",
             ...
         },
-        "verdict": "✅ Excellent — recipe is highly feasible",
+        "verdict": "Excellent — recipe is highly feasible",
         "reward_score": 0.84
     }
     """
