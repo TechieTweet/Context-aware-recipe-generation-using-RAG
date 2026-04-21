@@ -22,7 +22,7 @@ print("Loading reward function...")
 reward_mod = _load("reward_function", "mcts/reward_function.py")
 
 print("Loading cost estimator...")
-cost_mod = _load("cost_estimator", "cost_estimator/cost_estimator.py")
+cost_mod = _load("cost_estimator", "cost/cost_estimator.py")
 
 print("All modules loaded!\n")
 

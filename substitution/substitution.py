@@ -32,13 +32,22 @@ _reward_spec.loader.exec_module(_reward_mod)
 _compute_reward = _reward_mod.compute_reward
 
 
-def get_substitutes(ingredient: str, top_k: int = 3) -> list[dict]:
+def get_substitutes(ingredient: str, top_k: int = 3, dietary_restrictions: list = None) -> list[dict]:
     """
     Return ranked ingredient substitutes using FlavorDB + food embeddings.
     Indian ingredients are prioritised.
+    
+    Args:
+        ingredient (str): The ingredient to find substitutes for
+        top_k (int): Number of substitutes to return (default: 3)
+        dietary_restrictions (list): Optional list of dietary restrictions
+                                    e.g., ['vegan'], ['gluten_free'], ['vegan', 'gluten_free']
+    
+    Returns:
+        list[dict]: List of substitutes with scores and metadata
     """
     try:
-        results = _get_substitutes(ingredient, top_k=top_k)
+        results = _get_substitutes(ingredient, top_k=top_k, dietary_restrictions=dietary_restrictions)
         return results
     except Exception as e:
         return [{"substitute": "N/A", "similarity_score": 0.0, "notes": str(e)}]
