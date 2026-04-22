@@ -28,7 +28,7 @@ print("All modules loaded. API ready!")
 def health():
     return jsonify({
         "status": "running",
-        "module": "Person 3 — Substitution + Reward + Cost",
+        "module": "Substitution + Reward + Cost",
         "routes": [
             "GET  /",
             "POST /substitute",
@@ -189,7 +189,7 @@ def cost():
 @app.route("/pipeline", methods=["POST"])
 def pipeline():
     """
-    Main route — Person 2 calls this after generating a recipe.
+    Main route — calls this after generating a recipe.
 
     Input JSON:
     {
