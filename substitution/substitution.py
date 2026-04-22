@@ -7,7 +7,7 @@ import importlib.util
 
 # ── Load person3 substitution model ───────────────────────────
 _base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_sub_path = os.path.join(_base, "person3", "substitution", "substitution_model.py")
+_sub_path = os.path.join(_base, "substitution", "substitution_model.py")
 
 _spec = importlib.util.spec_from_file_location("substitution_model", _sub_path)
 _mod = importlib.util.module_from_spec(_spec)
@@ -16,7 +16,7 @@ _spec.loader.exec_module(_mod)
 _get_substitutes = _mod.get_substitutes
 
 # ── Load person3 cost estimator ────────────────────────────────
-_cost_path = os.path.join(_base, "person3", "cost_estimator", "cost_estimator.py")
+_cost_path = os.path.join(_base, "cost_estimator", "cost_estimator.py")
 _cost_spec = importlib.util.spec_from_file_location("cost_estimator", _cost_path)
 _cost_mod = importlib.util.module_from_spec(_cost_spec)
 _cost_spec.loader.exec_module(_cost_mod)
@@ -24,7 +24,7 @@ _cost_spec.loader.exec_module(_cost_mod)
 _estimate_cost = _cost_mod.estimate_cost
 
 # ── Load person3 reward function ───────────────────────────────
-_reward_path = os.path.join(_base, "person3", "mcts", "reward_function.py")
+_reward_path = os.path.join(_base, "mcts", "reward_function.py")
 _reward_spec = importlib.util.spec_from_file_location("reward_function", _reward_path)
 _reward_mod = importlib.util.module_from_spec(_reward_spec)
 _reward_spec.loader.exec_module(_reward_mod)
