@@ -364,8 +364,8 @@ input[type=radio]  { accent-color: #8B4513 !important; }
 }
 
 table { border-collapse: collapse; width: 100%; }
-th { background: #E8D5A3 !important; color: #2C1A0E !important; padding: 7px 12px; font-size: 12px; font-weight: 500; }
-td { color: #2C1A0E !important; padding: 6px 12px; border-bottom: 1px solid #D4BC82; font-size: 12px; }
+th { background: #E8D5A3 !important; color: #000000 !important; padding: 7px 12px; font-size: 12px; font-weight: 500; }
+td { color: #000000 !important; padding: 6px 12px; border-bottom: 1px solid #D4BC82; font-size: 12px; }
 
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #F5EDD8; }
