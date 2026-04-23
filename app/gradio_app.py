@@ -250,14 +250,14 @@ body, .gradio-container {
 }
 
 h1, h2, h3, h4, p, span, div, label, textarea, input, select, button {
-    color: #2C1A0E !important;
+    color: #000000 !important;
 }
 
 .app-title {
     font-family: 'Lora', serif !important;
     font-size: 1.8rem !important;
     font-weight: 500 !important;
-    color: #2C1A0E !important;
+    color: #000000 !important;
     padding: 1.4rem 0 1rem;
     border-bottom: 1.5px solid #C9B07A;
     margin-bottom: 1.6rem;
@@ -301,8 +301,8 @@ select {
 }
 
 button.primary {
-    background: #8B4513 !important;
-    color: #FDF6E3 !important;
+    background: #A8E6A3 !important;
+    color: #000000 !important;
     border: none !important;
     border-radius: 8px !important;
     font-family: 'Inter', sans-serif !important;
@@ -313,12 +313,12 @@ button.primary {
     transition: background 0.2s !important;
 }
 button.primary:hover {
-    background: #A0522D !important;
+    background: #94D89B !important;
 }
 
 button:not(.primary) {
-    background: #E8D5A3 !important;
-    color: #2C1A0E !important;
+    background: #C9F2C7 !important;
+    color: #000000 !important;
     border: 1px solid #C9B07A !important;
     border-radius: 7px !important;
     font-size: 12px !important;
@@ -360,7 +360,7 @@ input[type=range] { accent-color: #8B4513 !important; }
 input[type=radio]  { accent-color: #8B4513 !important; }
 
 .markdown-body, .prose p, .prose li, .prose h1, .prose h2, .prose h3 {
-    color: #2C1A0E !important;
+    color: #000000 !important;
 }
 
 table { border-collapse: collapse; width: 100%; }
