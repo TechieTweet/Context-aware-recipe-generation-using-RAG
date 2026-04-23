@@ -547,9 +547,3 @@ Verdict thresholds: ≥ 0.75 Excellent · ≥ 0.55 Good · ≥ 0.35 Fair · < 0.
 if __name__ == "__main__":
     is_kaggle = os.path.exists("/kaggle")
     demo.launch(share=is_kaggle, server_name="0.0.0.0", server_port=7860)
-
-
-
-
-some of the input drop down boxes are black or some other dark color too, can you please make them white?
-in the entire frontend, only text should be black 
