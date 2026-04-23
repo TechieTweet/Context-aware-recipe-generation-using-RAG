@@ -597,10 +597,9 @@ Verdict thresholds: ≥ 0.75 Excellent · ≥ 0.55 Good · ≥ 0.35 Fair · < 0.
 
 # ── Launch ─────────────────────────────────────────────────────
 if __name__ == "__main__":
-    load_all()
     is_kaggle = os.path.exists("/kaggle")
-    demo.launch(
-        share=is_kaggle,
-        server_name="0.0.0.0",
-        server_port=7860,
-    )
+    if is_kaggle:
+        demo.launch(share=False, server_name="0.0.0.0", server_port=7860,
+                    inline=True, height=800)
+    else:
+        demo.launch(server_name="0.0.0.0", server_port=7860)
