@@ -1,6 +1,6 @@
 # app/gradio_app.py
 # desktop layout
-# All path fixes baked in
+# All path fixes 
 
 import os
 import sys
@@ -115,7 +115,7 @@ def run_pipeline(query, ingredients_text, diet, appliance, time_limit, budget, s
     for line in lines:
         line = line.strip()
         if "ingredients:" in line.lower():                                    in_ing, in_steps = True, False;  continue
-        if "instructions:" in line.lower() or "directions:" in line.lower(): in_steps, in_ing = True, False; continue
+        if "instructions:" in line.lower() or "directions:" in line.lower(): in_steps, in_ing = True, False;  continue
         if "estimated time:" in line.lower() or "serves:" in line.lower():   in_ing, in_steps = False, False
         if in_ing and (line.startswith("-") or line.startswith("*")):
             gen_ingredients.append(line.lstrip("-* ").strip())
@@ -149,12 +149,12 @@ def run_pipeline(query, ingredients_text, diet, appliance, time_limit, budget, s
         if p3.get("missing_ingredients"):
             subs_out += f"**Missing:** {', '.join(p3['missing_ingredients'])}\n\n"
             for ing, subs in p3["substitutions"].items():
-                subs_out += f"**{ing}** →\n"
+                subs_out += f"**{ing}** can be replaced with:\n"
                 for s in subs:
-                    flag = "🇮🇳" if s.get("is_indian") else "🌍"
-                    subs_out += f"  {flag} {s['ingredient']}  _{s['final_score']}_\n"
+                    flag = "IN" if s.get("is_indian") else "—"
+                    subs_out += f"  [{flag}] {s['ingredient']}  (score: {s['final_score']})\n"
         else:
-            subs_out = "✅ All ingredients available."
+            subs_out = "All ingredients available — no substitutions needed."
 
         r = p3["reward"]
         reward_out = (
@@ -175,9 +175,9 @@ def run_pipeline(query, ingredients_text, diet, appliance, time_limit, budget, s
         )
 
     except Exception as e:
-        subs_out   = f"Unavailable ({str(e)[:80]})"
-        reward_out = "Unavailable"
-        cost_out   = "Unavailable"
+        subs_out   = f"Substitution unavailable ({str(e)[:80]})"
+        reward_out = "Score unavailable"
+        cost_out   = "Cost unavailable"
 
     return recipe, f"**References used:**\n{ref_titles}", subs_out, reward_out, cost_out
 
@@ -227,101 +227,150 @@ def run_constraint_pipeline(cuisine, diet, appliance, time_limit, budget, ingred
     return run_pipeline(query, ingredients_text, diet, appliance, time_limit, budget, servings, mode)
 
 
-# ── Dropdown options ──────────────────────────────────────────
-DIET_OPTS     = ["None", "Vegetarian", "Vegan", "Jain", "Gluten Free", "Diabetic"]
-APPLIANCE_OPTS= ["None", "Stovetop", "Pressure Cooker", "Microwave", "Oven", "Air Fryer"]
-TIME_OPTS     = ["None", "15 minutes", "30 minutes", "45 minutes", "60 minutes", "90 minutes"]
-BUDGET_OPTS   = ["None", "Under ₹50", "Under ₹150", "Under ₹300", "No limit"]
-CUISINE_OPTS  = ["Any", "Indian", "South Indian", "Mughlai", "Italian", "Chinese", "Mexican", "Continental"]
-MODE_OPTS     = ["Advanced RAG (RRF)", "Naive RAG", "Baseline (no RAG)"]
+# ── Options ───────────────────────────────────────────────────
+DIET_OPTS      = ["None", "Vegetarian", "Vegan", "Jain", "Gluten Free", "Diabetic"]
+APPLIANCE_OPTS = ["None", "Stovetop", "Pressure Cooker", "Microwave", "Oven", "Air Fryer"]
+TIME_OPTS      = ["None", "15 minutes", "30 minutes", "45 minutes", "60 minutes", "90 minutes"]
+BUDGET_OPTS    = ["None", "Under ₹50", "Under ₹150", "Under ₹300", "No limit"]
+CUISINE_OPTS   = ["Any", "Indian", "South Indian", "Mughlai", "Italian", "Chinese", "Mexican", "Continental"]
+MODE_OPTS      = ["Advanced RAG (RRF)", "Naive RAG", "Baseline (no RAG)"]
 
 # ── CSS ───────────────────────────────────────────────────────
 css = """
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Inter:wght@300;400;500&display=swap');
 
+*, *::before, *::after { box-sizing: border-box; }
+
 body, .gradio-container {
-    background: #FAF6EE !important;
+    background: #F5EDD8 !important;
     font-family: 'Inter', sans-serif !important;
-    color: #2E1F0E !important;
+    color: #2C1A0E !important;
     max-width: 1280px !important;
+    margin: 0 auto !important;
+}
+
+h1, h2, h3, h4, p, span, div, label, textarea, input, select, button {
+    color: #2C1A0E !important;
 }
 
 .app-title {
     font-family: 'Lora', serif !important;
-    font-size: 1.9rem !important;
+    font-size: 1.8rem !important;
     font-weight: 500 !important;
-    color: #2E1F0E !important;
-    letter-spacing: -0.3px;
-    padding: 1.5rem 0 0.2rem;
-    border-bottom: 1px solid #DDD0B0;
-    margin-bottom: 1.8rem;
+    color: #2C1A0E !important;
+    padding: 1.4rem 0 1rem;
+    border-bottom: 1.5px solid #C9B07A;
+    margin-bottom: 1.6rem;
+    letter-spacing: -0.2px;
 }
 
 label span {
-    font-size: 11px !important;
+    font-size: 10px !important;
     font-weight: 500 !important;
-    color: #8C7454 !important;
+    color: #7A5C2E !important;
     text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.2px !important;
 }
 
-textarea, input[type=text] {
-    background: #FEFCF5 !important;
-    border: 1px solid #DDD0B0 !important;
-    border-radius: 7px !important;
-    color: #2E1F0E !important;
+textarea, input[type=text], input[type=number] {
+    background: #FDF6E3 !important;
+    border: 1.5px solid #C9B07A !important;
+    border-radius: 8px !important;
+    color: #2C1A0E !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 13px !important;
+    padding: 10px 13px !important;
 }
-
 textarea:focus, input:focus {
-    border-color: #B5924A !important;
-    box-shadow: 0 0 0 3px rgba(181,146,74,0.1) !important;
+    border-color: #8B6914 !important;
     outline: none !important;
+    box-shadow: 0 0 0 3px rgba(139,105,20,0.12) !important;
+}
+textarea::placeholder, input::placeholder {
+    color: #A8896A !important;
 }
 
 select {
-    background: #FEFCF5 !important;
-    border: 1px solid #DDD0B0 !important;
-    border-radius: 7px !important;
-    color: #2E1F0E !important;
+    background: #FDF6E3 !important;
+    border: 1.5px solid #C9B07A !important;
+    border-radius: 8px !important;
+    color: #2C1A0E !important;
+    font-family: 'Inter', sans-serif !important;
     font-size: 12px !important;
+    padding: 8px 12px !important;
 }
 
 button.primary {
-    background: #2E1F0E !important;
-    color: #F5E6C0 !important;
-    border-radius: 7px !important;
+    background: #8B4513 !important;
+    color: #FDF6E3 !important;
+    border: none !important;
+    border-radius: 8px !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
-    padding: 10px 28px !important;
-    border: none !important;
+    padding: 11px 30px !important;
+    letter-spacing: 0.3px !important;
+    transition: background 0.2s !important;
 }
-button.primary:hover { background: #6B4A22 !important; }
-
-.block, .output-markdown {
-    background: #F5EED8 !important;
-    border: 1px solid #DDD0B0 !important;
-    border-radius: 9px !important;
+button.primary:hover {
+    background: #A0522D !important;
 }
 
+button:not(.primary) {
+    background: #E8D5A3 !important;
+    color: #2C1A0E !important;
+    border: 1px solid #C9B07A !important;
+    border-radius: 7px !important;
+    font-size: 12px !important;
+}
+
+.block, .output-markdown, .prose {
+    background: #FAF0D0 !important;
+    border: 1.5px solid #D4BC82 !important;
+    border-radius: 10px !important;
+    color: #2C1A0E !important;
+}
+
+.tab-nav {
+    border-bottom: 1.5px solid #C9B07A !important;
+    margin-bottom: 1.5rem !important;
+    background: transparent !important;
+}
 .tab-nav button {
+    font-family: 'Inter', sans-serif !important;
     font-size: 12px !important;
     font-weight: 500 !important;
-    color: #8C7454 !important;
+    color: #7A5C2E !important;
     background: transparent !important;
     border: none !important;
-    border-bottom: 2px solid transparent !important;
-    padding: 9px 16px !important;
-    letter-spacing: 0.5px !important;
+    border-bottom: 2.5px solid transparent !important;
+    padding: 9px 18px !important;
+    margin-bottom: -1.5px !important;
+    letter-spacing: 0.3px !important;
 }
 .tab-nav button.selected {
-    color: #2E1F0E !important;
-    border-bottom-color: #B5924A !important;
+    color: #2C1A0E !important;
+    border-bottom-color: #8B4513 !important;
+}
+.tab-nav button:hover {
+    color: #4A2C0E !important;
 }
 
-input[type=range] { accent-color: #B5924A !important; }
+input[type=range] { accent-color: #8B4513 !important; }
+input[type=radio]  { accent-color: #8B4513 !important; }
+
+.markdown-body, .prose p, .prose li, .prose h1, .prose h2, .prose h3 {
+    color: #2C1A0E !important;
+}
+
+table { border-collapse: collapse; width: 100%; }
+th { background: #E8D5A3 !important; color: #2C1A0E !important; padding: 7px 12px; font-size: 12px; font-weight: 500; }
+td { color: #2C1A0E !important; padding: 6px 12px; border-bottom: 1px solid #D4BC82; font-size: 12px; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #F5EDD8; }
+::-webkit-scrollbar-thumb { background: #C9B07A; border-radius: 3px; }
+
 footer { display: none !important; }
 """
 
@@ -332,10 +381,10 @@ with gr.Blocks(css=css, title="AI_Recipe") as demo:
 
     with gr.Tabs():
 
-        # ── Tab 1: Text query ─────────────────────────────────
+        # ── Tab 1: Kitchen ────────────────────────────────────
         with gr.Tab("Kitchen"):
             with gr.Row(equal_height=False):
-                with gr.Column(scale=1, min_width=340):
+                with gr.Column(scale=1, min_width=360):
                     t1_query = gr.Textbox(
                         label="What do you want to cook?",
                         placeholder="Something warm with lentils and spices...",
@@ -349,95 +398,99 @@ with gr.Blocks(css=css, title="AI_Recipe") as demo:
                         t1_diet      = gr.Dropdown(DIET_OPTS,      label="Diet",      value="None")
                         t1_appliance = gr.Dropdown(APPLIANCE_OPTS, label="Appliance", value="None")
                     with gr.Row():
-                        t1_time   = gr.Dropdown(TIME_OPTS,   label="Time",     value="None")
-                        t1_budget = gr.Dropdown(BUDGET_OPTS, label="Budget",   value="None")
-                    with gr.Row():
-                        t1_servings = gr.Slider(1, 8, value=2, step=1, label="Servings")
-                    t1_mode = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model")
-                    t1_btn  = gr.Button("Generate →", variant="primary")
+                        t1_time   = gr.Dropdown(TIME_OPTS,   label="Time limit", value="None")
+                        t1_budget = gr.Dropdown(BUDGET_OPTS, label="Budget",     value="None")
+                    t1_servings = gr.Slider(1, 8, value=2, step=1, label="Servings")
+                    t1_mode     = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model mode")
+                    t1_btn      = gr.Button("Generate recipe →", variant="primary")
 
-                with gr.Column(scale=2, min_width=500):
+                with gr.Column(scale=2, min_width=520):
                     t1_recipe    = gr.Markdown(label="Recipe")
-                    t1_retrieved = gr.Markdown(label="References")
+                    t1_retrieved = gr.Markdown(label="References used")
                     with gr.Row():
-                        t1_subs   = gr.Markdown(label="Substitutions")
-                        t1_cost   = gr.Markdown(label="Cost")
+                        t1_subs = gr.Markdown(label="Substitutions")
+                        t1_cost = gr.Markdown(label="Cost estimate")
+            t1_reward_hidden = gr.Markdown(visible=False)
 
             t1_btn.click(
                 fn=run_pipeline,
                 inputs=[t1_query, t1_ingredients, t1_diet, t1_appliance,
                         t1_time, t1_budget, t1_servings, t1_mode],
-                outputs=[t1_recipe, t1_retrieved, t1_subs,
-                         gr.Markdown(visible=False), t1_cost]
+                outputs=[t1_recipe, t1_retrieved, t1_subs, t1_reward_hidden, t1_cost]
             )
 
         # ── Tab 2: Photo ──────────────────────────────────────
         with gr.Tab("Photo"):
             with gr.Row(equal_height=False):
-                with gr.Column(scale=1, min_width=340):
-                    t2_image      = gr.Image(type="numpy", label="Upload a dish photo")
-                    t2_detected   = gr.Textbox(label="Detected dish", interactive=False)
-                    t2_ingredients= gr.Textbox(label="Ingredients you have (optional)",
-                                               placeholder="paneer, onion, tomato...")
+                with gr.Column(scale=1, min_width=360):
+                    t2_image       = gr.Image(type="numpy", label="Upload a dish photo")
+                    t2_detected    = gr.Textbox(label="Detected dish", interactive=False)
+                    t2_ingredients = gr.Textbox(
+                        label="Ingredients you have (optional)",
+                        placeholder="paneer, onion, tomato..."
+                    )
                     with gr.Row():
-                        t2_diet      = gr.Dropdown(DIET_OPTS,      label="Diet",     value="None")
-                        t2_appliance = gr.Dropdown(APPLIANCE_OPTS, label="Appliance",value="None")
+                        t2_diet      = gr.Dropdown(DIET_OPTS,      label="Diet",      value="None")
+                        t2_appliance = gr.Dropdown(APPLIANCE_OPTS, label="Appliance", value="None")
                     with gr.Row():
-                        t2_time   = gr.Dropdown(TIME_OPTS,   label="Time",   value="None")
-                        t2_budget = gr.Dropdown(BUDGET_OPTS, label="Budget", value="None")
+                        t2_time   = gr.Dropdown(TIME_OPTS,   label="Time limit", value="None")
+                        t2_budget = gr.Dropdown(BUDGET_OPTS, label="Budget",     value="None")
                     t2_servings = gr.Slider(1, 8, value=2, step=1, label="Servings")
-                    t2_mode     = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model")
+                    t2_mode     = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model mode")
                     t2_btn      = gr.Button("Identify & generate →", variant="primary")
 
-                with gr.Column(scale=2, min_width=500):
+                with gr.Column(scale=2, min_width=520):
                     t2_recipe    = gr.Markdown(label="Recipe")
-                    t2_retrieved = gr.Markdown(label="References")
+                    t2_retrieved = gr.Markdown(label="References used")
                     with gr.Row():
                         t2_subs = gr.Markdown(label="Substitutions")
-                        t2_cost = gr.Markdown(label="Cost")
+                        t2_cost = gr.Markdown(label="Cost estimate")
+            t2_reward_hidden = gr.Markdown(visible=False)
 
             t2_btn.click(
                 fn=run_image_pipeline,
                 inputs=[t2_image, t2_ingredients, t2_diet, t2_appliance,
                         t2_time, t2_budget, t2_servings, t2_mode],
                 outputs=[t2_detected, t2_recipe, t2_retrieved, t2_subs,
-                         gr.Markdown(visible=False), t2_cost]
+                         t2_reward_hidden, t2_cost]
             )
 
         # ── Tab 3: Constraints ────────────────────────────────
         with gr.Tab("Constraints"):
             with gr.Row(equal_height=False):
-                with gr.Column(scale=1, min_width=340):
+                with gr.Column(scale=1, min_width=360):
                     t3_cuisine    = gr.Dropdown(CUISINE_OPTS, label="Cuisine", value="Any")
                     with gr.Row():
-                        t3_diet      = gr.Dropdown(DIET_OPTS,      label="Diet",     value="None")
-                        t3_appliance = gr.Dropdown(APPLIANCE_OPTS, label="Appliance",value="None")
+                        t3_diet      = gr.Dropdown(DIET_OPTS,      label="Diet",      value="None")
+                        t3_appliance = gr.Dropdown(APPLIANCE_OPTS, label="Appliance", value="None")
                     with gr.Row():
-                        t3_time   = gr.Dropdown(TIME_OPTS,   label="Time",   value="None")
-                        t3_budget = gr.Dropdown(BUDGET_OPTS, label="Budget", value="None")
-                    t3_ingredients = gr.Textbox(label="Ingredients you have",
-                                                placeholder="potato, onion, spices...")
-                    t3_servings    = gr.Slider(1, 8, value=2, step=1, label="Servings")
-                    t3_mode        = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model")
-                    t3_btn         = gr.Button("Find recipe →", variant="primary")
+                        t3_time   = gr.Dropdown(TIME_OPTS,   label="Time limit", value="None")
+                        t3_budget = gr.Dropdown(BUDGET_OPTS, label="Budget",     value="None")
+                    t3_ingredients = gr.Textbox(
+                        label="Ingredients you have",
+                        placeholder="potato, onion, spices..."
+                    )
+                    t3_servings = gr.Slider(1, 8, value=2, step=1, label="Servings")
+                    t3_mode     = gr.Radio(MODE_OPTS, value="Advanced RAG (RRF)", label="Model mode")
+                    t3_btn      = gr.Button("Find recipe →", variant="primary")
 
-                with gr.Column(scale=2, min_width=500):
+                with gr.Column(scale=2, min_width=520):
                     t3_recipe    = gr.Markdown(label="Recipe")
-                    t3_retrieved = gr.Markdown(label="References")
+                    t3_retrieved = gr.Markdown(label="References used")
                     with gr.Row():
                         t3_subs = gr.Markdown(label="Substitutions")
-                        t3_cost = gr.Markdown(label="Cost")
+                        t3_cost = gr.Markdown(label="Cost estimate")
+            t3_reward_hidden = gr.Markdown(visible=False)
 
             t3_btn.click(
                 fn=run_constraint_pipeline,
                 inputs=[t3_cuisine, t3_diet, t3_appliance, t3_time, t3_budget,
                         t3_ingredients, t3_servings, t3_mode],
-                outputs=[t3_recipe, t3_retrieved, t3_subs,
-                         gr.Markdown(visible=False), t3_cost]
+                outputs=[t3_recipe, t3_retrieved, t3_subs, t3_reward_hidden, t3_cost]
             )
 
-        # ── Tab 4: Metrics & stats ────────────────────────────
-        with gr.Tab("Metrics"):
+        # ── Tab 4: Metrics ────────────────────────────────────
+        with gr.Tab("Metrics & Stats"):
             gr.Markdown("""
 ## Evaluation framework
 
@@ -445,7 +498,7 @@ with gr.Blocks(css=css, title="AI_Recipe") as demo:
 
 | Metric | Formula | Target |
 |--------|---------|--------|
-| Faithfulness | non-hallucinated ingredients / total ingredients | ≥ 0.70 |
+| Faithfulness | non-hallucinated ingredients / total ingredients listed | ≥ 0.70 |
 | Answer relevance | cosine similarity (query embedding, answer embedding) | ≥ 0.75 |
 | Contextual precision | retrieved docs with ≥3 ingredient overlap / total retrieved | ≥ 0.65 |
 | Contextual recall | user ingredients used in answer / total user ingredients | ≥ 0.65 |
@@ -462,7 +515,7 @@ with gr.Blocks(css=css, title="AI_Recipe") as demo:
 
 **Final reward** = 0.3 × Coherence + 0.4 × Constraints + 0.3 × Feasibility
 
-Verdict thresholds: ≥0.75 Excellent · ≥0.55 Good · ≥0.35 Fair · <0.35 Poor
+Verdict thresholds: ≥ 0.75 Excellent · ≥ 0.55 Good · ≥ 0.35 Fair · < 0.35 Poor
 
 ---
 
@@ -481,12 +534,13 @@ Verdict thresholds: ≥0.75 Excellent · ≥0.55 Good · ≥0.35 Fair · <0.35 P
 | | |
 |--|--|
 | Dataset | RecipeNLG — first 50,000 rows |
-| After filtering (≥3 ingredients) | 49,520 recipes |
-| Embedding model | all-MiniLM-L6-v2 (384-dim) |
-| Vector store | ChromaDB · HNSW · cosine similarity · 341MB |
-| Sparse index | BM25Okapi via rank_bm25 · 12.6MB |
+| After filtering (≥ 3 ingredients) | 49,520 recipes |
+| Embedding model | all-MiniLM-L6-v2 · 384 dimensions |
+| Vector store | ChromaDB · HNSW index · cosine similarity · 341 MB |
+| Sparse index | BM25Okapi via rank_bm25 · 12.6 MB |
 | Fusion method | Reciprocal Rank Fusion · k=60 · pool size 50+50 |
 | LLM | LLaMA 3.1 8B via Groq API |
+| Cost estimator | Indian market prices (BigBasket / Blinkit averages) |
             """)
 
 # ── Launch ────────────────────────────────────────────────────
