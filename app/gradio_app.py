@@ -372,26 +372,6 @@ td { color: #000000 !important; padding: 6px 12px; border-bottom: 1px solid #D4B
 ::-webkit-scrollbar-thumb { background: #C9B07A; border-radius: 3px; }
 
 footer { display: none !important; }
-
-/* FORCE dropdown popup (the black box) to white */
-div[role="listbox"] {
-    background: #FFFFFF !important;
-    color: #000000 !important;
-    border: 1px solid #C9B07A !important;
-}
-
-/* Each option inside dropdown */
-div[role="option"] {
-    background: #FFFFFF !important;
-    color: #000000 !important;
-}
-
-/* Hover + selected state */
-div[role="option"]:hover,
-div[role="option"][aria-selected="true"] {
-    background: #E8F5E9 !important;  /* soft pastel hover */
-    color: #000000 !important;
-}
 """
 
 # ── UI ────────────────────────────────────────────────────────
