@@ -596,10 +596,20 @@ Verdict thresholds: ≥ 0.75 Excellent · ≥ 0.55 Good · ≥ 0.35 Fair · < 0.
             """)
 
 # ── Launch ─────────────────────────────────────────────────────
+# if __name__ == "__main__":
+#     is_kaggle = os.path.exists("/kaggle")
+#     if is_kaggle:
+#         demo.launch(share=False, server_name="0.0.0.0", server_port=7860,
+#                     inline=True, height=800)
+#     else:
+#         demo.launch(server_name="0.0.0.0", server_port=7860)
 if __name__ == "__main__":
     is_kaggle = os.path.exists("/kaggle")
     if is_kaggle:
-        demo.launch(share=False, server_name="0.0.0.0", server_port=7860,
-                    inline=True, height=800)
+        result = demo.launch(share=True, server_name="0.0.0.0", server_port=7860,
+                             inline=False, quiet=True)
+        public_url = result[2]
+        from IPython.display import IFrame, display
+        display(IFrame(public_url, width="100%", height=850))
     else:
         demo.launch(server_name="0.0.0.0", server_port=7860)
