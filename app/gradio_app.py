@@ -252,53 +252,52 @@ def run_constraint_pipeline(cuisine, diet, appliance, time_limit, budget, ingred
 
 # ── CSS ───────────────────────────────────────────────────────
 css = """
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; }
 
 body, .gradio-container {
-    background: #F5F0E8 !important;
-    font-family: 'DM Sans', sans-serif !important;
-    color: #2C1810 !important;
+    background: #FEF9ED !important;
+    font-family: 'Jost', sans-serif !important;
+    color: #3D2B0E !important;
 }
 
 .gradio-container {
-    max-width: 1080px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 2rem 1.5rem !important;
+    padding: 2.5rem 2rem !important;
 }
 
 .app-header {
     text-align: center;
-    padding: 2rem 0 1.5rem;
-    border-bottom: 1px solid #D4C4B0;
+    padding: 1.8rem 0 1.5rem;
+    border-bottom: 1px solid #E0CFA0;
     margin-bottom: 2rem;
 }
 
 .app-header h1 {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 2.4rem !important;
+    font-family: 'Lora', serif !important;
+    font-size: 2.2rem !important;
     font-weight: 500 !important;
-    color: #3C2415 !important;
+    color: #3D2B0E !important;
     margin: 0 0 0.3rem !important;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
 }
 
 .app-header p {
-    color: #7A6355 !important;
-    font-size: 14px !important;
+    color: #9C845A !important;
+    font-size: 13px !important;
     font-weight: 300 !important;
     margin: 0 !important;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
 }
 
-/* Tabs */
-.tab-nav { border-bottom: 1px solid #D4C4B0 !important; margin-bottom: 1.5rem; }
+.tab-nav { border-bottom: 1px solid #E0CFA0 !important; margin-bottom: 1.5rem; }
 .tab-nav button {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 12px !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 11px !important;
     font-weight: 500 !important;
-    color: #7A6355 !important;
+    color: #9C845A !important;
     background: transparent !important;
     border: none !important;
     border-bottom: 2px solid transparent !important;
@@ -308,108 +307,80 @@ body, .gradio-container {
     margin-bottom: -1px !important;
 }
 .tab-nav button.selected {
-    color: #3C2415 !important;
-    border-bottom-color: #8B5E3C !important;
+    color: #3D2B0E !important;
+    border-bottom-color: #C9A84C !important;
 }
 
-/* Inputs */
 label span {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 11px !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 10px !important;
     font-weight: 500 !important;
-    color: #7A6355 !important;
+    color: #9C845A !important;
     text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.2px !important;
 }
 
 textarea, input[type="text"], input[type="number"] {
-    background: #FAF7F2 !important;
-    border: 1px solid #D4C4B0 !important;
+    background: #FEFCF4 !important;
+    border: 1px solid #E0CFA0 !important;
     border-radius: 8px !important;
-    color: #2C1810 !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 14px !important;
+    color: #3D2B0E !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 13px !important;
     padding: 10px 14px !important;
 }
 
 textarea:focus, input:focus {
-    border-color: #8B5E3C !important;
+    border-color: #C9A84C !important;
     outline: none !important;
-    box-shadow: 0 0 0 3px rgba(139,94,60,0.08) !important;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12) !important;
 }
 
 select {
-    background: #FAF7F2 !important;
-    border: 1px solid #D4C4B0 !important;
+    background: #FEFCF4 !important;
+    border: 1px solid #E0CFA0 !important;
     border-radius: 8px !important;
-    color: #2C1810 !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 13px !important;
+    color: #3D2B0E !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 12px !important;
     padding: 8px 12px !important;
 }
 
-/* Button */
-button.primary, .btn-primary {
-    background: #3C2415 !important;
-    color: #F5F0E8 !important;
+button.primary {
+    background: #3D2B0E !important;
+    color: #F5E6B2 !important;
     border: none !important;
     border-radius: 8px !important;
-    font-family: 'DM Sans', sans-serif !important;
+    font-family: 'Jost', sans-serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
     padding: 12px 32px !important;
     letter-spacing: 0.5px !important;
-    cursor: pointer !important;
-    transition: background 0.2s !important;
 }
-button.primary:hover { background: #6B4423 !important; }
+button.primary:hover { background: #7A5C2E !important; }
 
-/* Output blocks */
 .output-markdown, .block {
-    background: #FAF7F2 !important;
-    border: 1px solid #D4C4B0 !important;
+    background: #F7F0DA !important;
+    border: 1px solid #EDE3C3 !important;
     border-radius: 10px !important;
 }
 
 .prose {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 14px !important;
-    line-height: 1.75 !important;
-    color: #2C1810 !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 13px !important;
+    line-height: 1.85 !important;
+    color: #3D2B0E !important;
 }
 
-/* Slider */
-input[type="range"] { accent-color: #8B5E3C !important; }
+input[type="range"] { accent-color: #C9A84C !important; }
+input[type="radio"] { accent-color: #C9A84C !important; }
 
-/* Radio */
-input[type="radio"] { accent-color: #8B5E3C !important; }
-
-/* Section labels */
-.section-label {
-    font-size: 11px;
-    font-weight: 500;
-    color: #7A6355;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-}
-
-/* Footer */
 footer { display: none !important; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #F5F0E8; }
-::-webkit-scrollbar-thumb { background: #C4A882; border-radius: 3px; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #FEF9ED; }
+::-webkit-scrollbar-thumb { background: #E0CFA0; border-radius: 3px; }
 """
-
-# ── Options ───────────────────────────────────────────────────
-DIET_OPTS      = ["None", "Vegetarian", "Vegan", "Jain", "Gluten Free", "Diabetic"]
-APPLIANCE_OPTS = ["None", "Stovetop", "Pressure Cooker", "Microwave", "Oven", "Air Fryer"]
-TIME_OPTS      = ["None", "15 minutes", "30 minutes", "45 minutes", "60 minutes", "90 minutes"]
-BUDGET_OPTS    = ["None", "Under ₹50", "Under ₹150", "Under ₹300", "No limit"]
-MODE_OPTS      = ["Advanced RAG (RRF)", "Naive RAG", "Baseline (no RAG)"]
-CUISINE_OPTS   = ["Any", "Indian", "South Indian", "Mughlai", "Italian", "Chinese", "Mexican", "Continental"]
 
 # ── Shared constraint inputs builder ──────────────────────────
 def constraint_row():
