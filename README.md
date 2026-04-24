@@ -49,4 +49,4 @@ pip install -r requirements.txt
 
 - **Person 1(Shreya parashar)** — Data pipeline, ChromaDB, BM25, hybrid retrieval, RAGAS evaluation
 - **Person 2(Swathi M)** — LLM generation, CLIP image input, Gradio UI
-- **Person 3(Srujana T)** — Ingredient substitution, cost estimation, human evaluation rubric
+- **Person 3(Srujana T)** — Ingredient substitution, cost estimation, human evaluation rubric.
