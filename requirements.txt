@@ -1,0 +1,14 @@
+chromadb
+sentence-transformers
+rank_bm25
+pandas
+numpy
+torch
+ragas
+datasets
+gradio
+transformers
+Pillow
+requests
+huggingface_hub
+pyarrow
