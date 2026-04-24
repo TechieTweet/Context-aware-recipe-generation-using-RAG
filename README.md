@@ -47,6 +47,6 @@ pip install -r requirements.txt
 
 ## Team
 
-- **Person 1** — Data pipeline, ChromaDB, BM25, hybrid retrieval, RAGAS evaluation
-- **Person 2** — LLM generation, CLIP image input, Gradio UI
-- **Person 3** — Ingredient substitution, cost estimation, human evaluation rubric
+- **Person 1(Shreya parashar)** — Data pipeline, ChromaDB, BM25, hybrid retrieval, RAGAS evaluation
+- **Person 2(Swathi M)** — LLM generation, CLIP image input, Gradio UI
+- **Person 3(Srujana T)** — Ingredient substitution, cost estimation, human evaluation rubric
